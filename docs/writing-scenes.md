@@ -44,6 +44,8 @@ pub struct Slider {
 }
 
 impl Scene for Slider {
+    type Color = BinaryColor;
+
     fn update(&mut self) {
         self.x = self.x.wrapping_add(1);
     }
@@ -84,6 +86,9 @@ cargo run -p slider --example preview --features sim
 
 ## 4. Run on the board
 
+Copy the firmware for your panel: `demos/firmware/blob` for the monochrome
+OLED, `demos/firmware/blob-lcd` for the color LCD. For the OLED:
+
 ```sh
 cp -R demos/firmware/blob demos/firmware/slider
 rm -rf demos/firmware/slider/target demos/firmware/slider/Cargo.lock
@@ -111,6 +116,9 @@ flash as described in the
   preview (`sim::run(scene, size, 30)`) as in the firmware (`DisplaySize…`,
   `FRAME_TIME`), so the preview looks like the board. Speeds are in pixels per
   tick.
+- **Pick the color type.** `type Color = BinaryColor;` for a monochrome OLED,
+  `Rgb565` for a color LCD. To run one scene on both, make it generic over
+  the color the way `Blob<C>` is.
 - **Redraw everything in `draw`.** The target is cleared before each `draw`.
 - **Unlit pixels are shapes too.** Drawing with `BinaryColor::Off` on top of a
   filled shape cuts a hole in it. The blob's eyes work this way.

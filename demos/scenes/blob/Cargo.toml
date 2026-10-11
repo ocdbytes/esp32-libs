@@ -15,3 +15,7 @@ oled-frames = { path = "../../../oled-frames" }
 [[example]]
 name = "preview"
 required-features = ["sim"]
+
+[[example]]
+name = "preview_lcd"
+required-features = ["sim"]

@@ -1,13 +1,18 @@
 # Simulator
 
-`oled_frames::sim::run(scene, size, fps)` opens a window that looks like a
-blue OLED of the given size and runs the scene until you close the window or
-press **Esc**.
+`oled_frames::sim::run(scene, size, fps)` opens a window that looks like the
+panel and runs the scene until you close the window or press **Esc**:
+
+- **Monochrome scenes** (`BinaryColor`) look like a blue OLED, with a dark gap
+  between pixels.
+- **Color scenes** (e.g. `Rgb565`) show their true colors with no gaps, like an
+  LCD.
 It is built on
 [`embedded-graphics-simulator`](https://crates.io/crates/embedded-graphics-simulator).
 
 ```sh
-cargo run -p blob --example preview --features sim
+cargo run -p blob --example preview --features sim       # 128x64 OLED
+cargo run -p blob --example preview_lcd --features sim   # 240x320 color LCD
 ```
 
 ## Requirements
@@ -25,9 +30,9 @@ build takes about 30 seconds while SDL2 compiles.
 | Setting | Value | Where |
 | ------- | ----- | ----- |
 | Panel size | `size` argument to `run` (blob preview: `SIZE = 128×64`) | the preview's `main` |
-| Colours | `OledBlue` theme (cyan on dark blue) | `oled-frames/src/lib.rs` |
+| Colors | Monochrome: `OledBlue` theme (cyan on dark blue). Color: true colors | `oled-frames/src/lib.rs` |
 | Pixel size | `SCALE = 2` window pixels per panel pixel | `oled-frames/src/lib.rs` |
-| Pixel gap | `PIXEL_SPACING = 1` window pixel | `oled-frames/src/lib.rs` |
+| Pixel gap | Monochrome: `OLED_PIXEL_SPACING = 1` window pixel. Color: none | `oled-frames/src/lib.rs` |
 | Frame rate | `fps` argument to `run` | the preview's `main` |
 
 ## The `sim` feature
@@ -75,8 +80,9 @@ fn main() {
 }
 ```
 
-The window grows or shrinks to match. Any size works; the `ssd1306` crate
-supports 128×64, 128×32, 96×16, 72×40, 64×48 and 64×32 panels.
+The window grows or shrinks to match: a 240×320 LCD opens a 480×640 window.
+Any size works; the `ssd1306` crate supports 128×64, 128×32, 96×16, 72×40,
+64×48 and 64×32 panels.
 
 ## Limitations
 

@@ -16,9 +16,9 @@ time).
 
 | Crate | Test | Checks |
 | ----- | ---- | ------ |
-| `oled-frames` | `frame_clears_previous_frame` | `frame()` clears the last frame before drawing |
-| `blob` | `stays_on_screen` | The body stays fully on screen for 10,000 ticks, on every `ssd1306` panel size |
-| `blob` | `eyes_light_up_while_blinking` | Eyes are unlit when open and lit during a blink |
+| `oled-frames` | `frame_clears_previous_frame` | `frame()` clears the last frame before drawing, for `BinaryColor` and `Rgb565` |
+| `blob` | `stays_on_screen` | The body stays fully on screen for 10,000 ticks, on every `ssd1306` panel size and on 240×320 / 320×240 |
+| `blob` | `eyes_take_body_color_while_blinking` | Eyes show their color when open and the body color mid-blink, monochrome and `Rgb565` |
 
 ## Libraries on the ESP32 target
 
@@ -32,7 +32,8 @@ cargo +esp build -p blob --target xtensa-esp32-none-elf -Z build-std=core --rele
 
 ## Firmware
 
-From `demos/firmware/<name>/`, with `source ~/export-esp.sh` run first:
+From `demos/firmware/<name>/` (`blob` or `blob-lcd`), with
+`source ~/export-esp.sh` run first:
 
 ```sh
 cargo build --release

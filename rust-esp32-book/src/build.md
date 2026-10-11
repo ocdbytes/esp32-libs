@@ -22,6 +22,14 @@ demos/firmware/blob/target/xtensa-esp32-none-elf/release/blob-firmware
 The file is an ELF of about 2 MB, most of it debug symbols. The part that goes
 into flash is about 110 KB (see [image size](./debugging.md#image-size)).
 
+| Firmware directory | Binary | Display | Flash size |
+| ------------------ | ------ | ------- | ---------- |
+| `demos/firmware/blob` | `blob-firmware` | SSD1306 OLED | ~110 KB |
+| `demos/firmware/blob-lcd` | `blob-lcd-firmware` | ILI9341 TFT LCD | ~94 KB |
+
+The LCD firmware also uses 150 KB of RAM for its frame buffer
+([why](../../docs/hardware-lcd.md#why-the-firmware-has-a-frame-buffer)).
+
 ## Debug build
 
 ```sh

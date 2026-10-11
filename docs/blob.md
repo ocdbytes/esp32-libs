@@ -5,24 +5,34 @@
 </p>
 
 `demos/scenes/blob` is a 15 px ball with two oval eyes. It walks sideways, hops
-under gravity, turns around at the screen edges, and blinks.
+under gravity, turns around at the screen edges, and blinks. It runs in
+monochrome on an OLED and in color on a TFT LCD.
 
-- **Desktop:** `cargo run -p blob --example preview --features sim`
-- **Board:** `demos/firmware/blob`. See the
-  [Rust ESP32 book](../rust-esp32-book/src/flash.md).
+| | Monochrome OLED | Color LCD |
+| - | --------------- | --------- |
+| Constructor | `Blob::new(size)` | `Blob::with_colors(size, body, eyes)` |
+| Desktop | `cargo run -p blob --example preview --features sim` | `cargo run -p blob --example preview_lcd --features sim` |
+| Board | `demos/firmware/blob` | `demos/firmware/blob-lcd` (hot pink body, black eyes) |
+
+Building and flashing: [Rust ESP32 book](../rust-esp32-book/src/flash.md).
 
 ## How it works
 
-- **Body:** a filled circle drawn with `BinaryColor::On`.
-- **Eyes:** two `BinaryColor::Off` ovals drawn on top of the body, so they are
-  unlit holes. They shift 1 px toward the direction of travel.
-- **Blink:** for a few ticks per cycle the eyes are not drawn, so their pixels
-  stay lit like the rest of the body.
+- **Body:** a filled circle in the body color (`BinaryColor::On` in
+  monochrome).
+- **Eyes:** two ovals in the eye color drawn on top of the body. In
+  monochrome they are `BinaryColor::Off`, so they are unlit holes. They shift
+  1 px toward the direction of travel.
+- **Blink:** for a few ticks per cycle the eyes are not drawn, so the body
+  color shows where they were.
+- **Color type:** `Blob<C>` works with any `embedded-graphics` color. `C`
+  defaults to `BinaryColor`.
 - **Motion:** gravity pulls the blob down each tick. When it reaches the floor
   it takes off again at `HOP_SPEED`. On short screens it bumps the ceiling and
   falls back. Sideways speed flips at the walls.
-- **Size:** `Blob::new(size)` takes the screen size. It is tested on every
-  panel size `ssd1306` supports, down to 96×16.
+- **Size:** the constructor takes the screen size. It is tested on every
+  panel size `ssd1306` supports, down to 96×16, and on a 240×320 LCD in both
+  orientations. The body is always 15 px, so it is small on the LCD.
 
 ## Tuning
 
@@ -48,6 +58,6 @@ cargo test -p blob
 
 - `stays_on_screen`: over 10,000 ticks the body never leaves the screen, for
   every panel size `ssd1306` supports (128×64, 128×32, 96×16, 72×40, 64×48,
-  64×32).
-- `eyes_light_up_while_blinking`: an eye pixel is unlit when the eyes are open
-  and lit during a blink.
+  64×32) and for 240×320 and 320×240.
+- `eyes_take_body_color_while_blinking`: an eye pixel shows the eye color when
+  open and the body color during a blink, in monochrome and in `Rgb565`.

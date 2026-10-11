@@ -1,4 +1,6 @@
-# Hardware
+# Hardware: monochrome OLED
+
+For the color LCD, see [Hardware: color TFT LCD](./hardware-lcd.md).
 
 Target setup: nodemcu-32s (Xtensa ESP32), 128×64 SSD1306 OLED over I²C,
 [`esp-hal`](https://github.com/esp-rs/esp-hal) 1.1, `ssd1306` 0.9.

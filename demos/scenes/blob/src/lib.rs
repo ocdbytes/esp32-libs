@@ -1,7 +1,8 @@
 //! A small round blob with two eyes that hops around and blinks.
 //!
 //! [`Blob`] is an [`oled_frames::Scene`], so the same code runs in the desktop
-//! preview (`examples/preview.rs`) and on the ESP32 (`demos/firmware/blob`).
+//! previews (`examples/`) and on the ESP32: monochrome on an OLED
+//! (`demos/firmware/blob`), in color on a TFT LCD (`demos/firmware/blob-lcd`).
 #![no_std]
 #![warn(missing_docs)]
 
@@ -34,9 +35,16 @@ const HOP_SPEED: f32 = 4.0;
 /// Sideways speed in pixels per tick.
 const WALK_SPEED: f32 = 1.0;
 
-/// A filled ball whose eyes are unlit holes in the body.
+/// A filled ball with two eyes, drawn in colors of type `C`.
+///
+/// On a monochrome panel the body is lit and the eyes are unlit holes
+/// ([`Blob::new`]). On a color panel pick both colors ([`Blob::with_colors`]).
 #[derive(Debug)]
-pub struct Blob {
+pub struct Blob<C = BinaryColor> {
+    /// Body color; also what shows through the eyes during a blink.
+    body: C,
+    /// Eye color.
+    eyes: C,
     /// Screen size, for the floor and walls.
     size: Size,
     /// Body center in pixels.
@@ -49,10 +57,21 @@ pub struct Blob {
     tick: u32,
 }
 
-impl Blob {
-    /// Creates a blob standing in the bottom-left corner of a `size` screen.
+impl Blob<BinaryColor> {
+    /// Creates a monochrome blob, lit body with unlit eyes, standing in the
+    /// bottom-left corner of a `size` screen.
     pub fn new(size: Size) -> Self {
+        Self::with_colors(size, BinaryColor::On, BinaryColor::Off)
+    }
+}
+
+impl<C> Blob<C> {
+    /// Creates a blob with the given colors, standing in the bottom-left
+    /// corner of a `size` screen.
+    pub fn with_colors(size: Size, body: C, eyes: C) -> Self {
         Self {
+            body,
+            eyes,
             size,
             x: RADIUS,
             y: size.height as f32 - RADIUS,
@@ -74,7 +93,9 @@ impl Blob {
     }
 }
 
-impl Scene for Blob {
+impl<C: PixelColor + Default> Scene for Blob<C> {
+    type Color = C;
+
     fn update(&mut self) {
         self.tick = (self.tick + 1) % BLINK_EVERY;
 
@@ -103,15 +124,15 @@ impl Scene for Blob {
 
     fn draw<D>(&self, target: &mut D) -> Result<(), D::Error>
     where
-        D: DrawTarget<Color = BinaryColor>,
+        D: DrawTarget<Color = C>,
     {
         Circle::with_center(self.center(), BODY_DIAMETER)
-            .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
+            .into_styled(PrimitiveStyle::with_fill(self.body))
             .draw(target)?;
 
-        // A blink skips the eyes, so their pixels stay lit like the body.
+        // A blink skips the eyes, so the body color shows where they were.
         if self.tick < BLINK_EVERY - BLINK_LEN {
-            let eye = PrimitiveStyle::with_fill(BinaryColor::Off);
+            let eye = PrimitiveStyle::with_fill(self.eyes);
             for p in self.eyes() {
                 Ellipse::with_center(p, EYE_SIZE)
                     .into_styled(eye)
@@ -124,14 +145,25 @@ impl Scene for Blob {
 
 #[cfg(test)]
 mod tests {
-    use embedded_graphics::{mock_display::MockDisplay, primitives::Rectangle};
+    use embedded_graphics::{mock_display::MockDisplay, pixelcolor::Rgb565, primitives::Rectangle};
 
     use super::*;
 
     #[test]
     fn stays_on_screen() {
-        // Every panel size the `ssd1306` crate supports.
-        for (w, h) in [(128, 64), (128, 32), (96, 16), (72, 40), (64, 48), (64, 32)] {
+        // Every panel size the `ssd1306` crate supports, plus a 240x320 LCD
+        // in portrait and landscape.
+        let sizes = [
+            (128, 64),
+            (128, 32),
+            (96, 16),
+            (72, 40),
+            (64, 48),
+            (64, 32),
+            (240, 320),
+            (320, 240),
+        ];
+        for (w, h) in sizes {
             let size = Size::new(w, h);
             let screen = Rectangle::new(Point::zero(), size);
             let mut blob = Blob::new(size);
@@ -147,21 +179,27 @@ mod tests {
         }
     }
 
-    #[test]
-    fn eyes_light_up_while_blinking() {
+    /// Checks that an eye pixel shows `eyes` while open and `body` mid-blink.
+    fn assert_blinks<C: PixelColor + Default + core::fmt::Debug>(body: C, eyes: C) {
         // MockDisplay is fixed at 64x64, so the blob gets a 64x64 screen.
-        let mut blob = Blob::new(Size::new(64, 64));
+        let mut blob = Blob::with_colors(Size::new(64, 64), body, eyes);
         let mut display = MockDisplay::new();
         display.set_allow_overdraw(true);
 
         let Ok(()) = blob.frame(&mut display);
         let eye = blob.eyes()[0];
-        assert_eq!(display.get_pixel(eye), Some(BinaryColor::Off), "eye open");
+        assert_eq!(display.get_pixel(eye), Some(eyes), "eye open");
 
         for _ in 0..BLINK_EVERY - BLINK_LEN {
             let Ok(()) = blob.frame(&mut display);
         }
         let eye = blob.eyes()[0];
-        assert_eq!(display.get_pixel(eye), Some(BinaryColor::On), "eye shut");
+        assert_eq!(display.get_pixel(eye), Some(body), "eye shut");
+    }
+
+    #[test]
+    fn eyes_take_body_color_while_blinking() {
+        assert_blinks(BinaryColor::On, BinaryColor::Off);
+        assert_blinks(Rgb565::RED, Rgb565::WHITE);
     }
 }

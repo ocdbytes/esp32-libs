@@ -3,11 +3,12 @@
 </p>
 
 <h1 align="center">esp32-libs</h1>
-<p align="center"><em>Rust libraries and demos for ESP32 boards with monochrome OLED displays.</em></p>
+<p align="center"><em>Rust libraries and demos for ESP32 boards with small displays.</em></p>
 
-Draw on an SSD1306 OLED (128×64, 128×32 and other sizes) one frame at a time.
-Write a scene once, preview it in a desktop window that looks like the panel,
-then flash the same code to an ESP32.
+Draw on a monochrome SSD1306 OLED (I²C) or a color TFT LCD such as the 2.8"
+240×320 ILI9341 (SPI), one frame at a time. Write a scene once, preview it in
+a desktop window that looks like the panel, then flash the same code to an
+ESP32.
 
 ## What's here
 
@@ -17,6 +18,7 @@ then flash the same code to an ESP32.
 | [`demos/`](./demos) | Everything built on the library; start with its README | |
 | [`demos/scenes/blob/`](./demos/scenes/blob) | Demo scene: a blob that hops and blinks | Desktop, ESP32 |
 | [`demos/firmware/blob/`](./demos/firmware/blob) | ESP32 firmware that shows the blob on the OLED | ESP32 |
+| [`demos/firmware/blob-lcd/`](./demos/firmware/blob-lcd) | ESP32 firmware that shows the blob in color on the TFT LCD | ESP32 |
 | [`docs/`](./docs) | How the library works and how to write scenes | |
 | [`rust-esp32-book/`](./rust-esp32-book) | Toolchain setup, building, flashing, debugging | |
 
@@ -25,14 +27,15 @@ then flash the same code to an ESP32.
 Preview the blob on your computer (needs Rust 1.85+ and CMake):
 
 ```sh
-cargo run -p blob --example preview --features sim
+cargo run -p blob --example preview --features sim       # OLED
+cargo run -p blob --example preview_lcd --features sim   # color LCD
 ```
 
 Run it on the board (one-time toolchain setup:
 [rust-esp32-book/src/setup.md](./rust-esp32-book/src/setup.md)):
 
 ```sh
-cd demos/firmware/blob
+cd demos/firmware/blob  # or demos/firmware/blob-lcd for the color LCD
 source ~/export-esp.sh
 cargo run --release     # build, flash, and open the serial monitor
 ```

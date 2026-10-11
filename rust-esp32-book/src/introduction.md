@@ -8,7 +8,8 @@ program running on an ESP32.
 | | |
 | - | - |
 | Board | nodemcu-32s (ESP32, Xtensa) |
-| Display | 128×64 SSD1306 OLED over I²C (wiring: [docs/hardware.md](../../docs/hardware.md)) |
+| Displays | 128×64 SSD1306 OLED over I²C ([wiring](../../docs/hardware.md)), firmware `demos/firmware/blob` |
+| | 2.8" 240×320 ILI9341 TFT LCD over SPI ([wiring](../../docs/hardware-lcd.md)), firmware `demos/firmware/blob-lcd` |
 | USB serial chip | Silicon Labs CP210x |
 | Serial port (macOS) | usually `/dev/cu.SLAB_USBtoUART` |
 
@@ -32,8 +33,9 @@ of the root workspace. These files make it build for the ESP32:
 | `.cargo/config.toml` | Target `xtensa-esp32-none-elf`, `build-std = ["core"]`, the `espflash` runner, `ESP_LOG` level |
 | `build.rs` | Links with `linkall.x` and prints hints for common linker errors |
 
-So all commands in this book run from inside the firmware directory, for
-example `demos/firmware/blob/`.
+So all commands in this book run from inside the firmware directory. The
+examples use `demos/firmware/blob/`; for the LCD, use
+`demos/firmware/blob-lcd/` and the binary name `blob-lcd-firmware`.
 
 ## Reference
 

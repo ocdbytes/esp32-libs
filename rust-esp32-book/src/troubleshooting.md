@@ -26,3 +26,14 @@
 | Still dark with correct wiring | The panel may use I²C address `0x3D`: use `I2CDisplayInterface::new_alternate_address` |
 | Garbled image | Lower the I²C speed in `src/main.rs`: `Rate::from_khz(400)` → `Rate::from_khz(100)` |
 | `display flush failed` in the monitor | Same checks as above: wiring, address, I²C speed |
+
+## LCD
+
+| Symptom | Fix |
+| ------- | --- |
+| White screen, nothing drawn | Check wiring: CS = GPIO5, DC = GPIO16, RESET = GPIO17, MOSI = GPIO23, SCK = GPIO18 ([docs/hardware-lcd.md](../../docs/hardware-lcd.md#wiring)) |
+| Screen stays black | The backlight pin LED must go to 3V3 |
+| Red and blue swapped | Flip `COLOR_ORDER` in `src/main.rs` ([colors](../../docs/hardware-lcd.md#colors)) |
+| Colors look like a negative | Flip `COLOR_INVERSION` in `src/main.rs` |
+| Garbled or shifted image | Lower `SPI_FREQUENCY` in `src/main.rs`, e.g. to 20 MHz |
+| Still wrong with the checks above | The panel may be an ST7789, not an ILI9341 ([controller](../../docs/hardware-lcd.md#controller)) |
