@@ -1,0 +1,21 @@
+[package]
+name = "oled-frames"
+version = "0.0.1"
+edition = "2024"
+rust-version = "1.85"
+
+[features]
+# Desktop preview window (needs std; builds SDL2 with cmake). Leave off for firmware builds.
+sim = ["dep:embedded-graphics-simulator", "dep:sdl2"]
+
+[dependencies]
+embedded-graphics = "0.8"
+embedded-graphics-simulator = { version = "0.8", optional = true }
+# Not used directly: compiles the simulator's SDL2 from source and links it
+# statically, so no system SDL2 install is needed.
+sdl2 = { version = "0.38", features = ["bundled", "static-link"], optional = true }
+
+[[example]]
+name = "blob"
+required-features = ["sim"]
+test = true
