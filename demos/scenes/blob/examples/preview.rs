@@ -5,7 +5,7 @@
 
 use blob::Blob;
 use embedded_graphics::prelude::*;
-use oled_frames::sim;
+use frames::sim;
 
 /// Panel size in pixels; set it to match your display.
 const SIZE: Size = Size::new(128, 64);

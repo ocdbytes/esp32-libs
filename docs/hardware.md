@@ -78,8 +78,8 @@ firmware crate; these are for one in `demos/firmware/<name>/`:
 
 ```toml
 [dependencies]
-oled-frames = { path = "../../../oled-frames" } # no `sim` feature on firmware
-blob = { path = "../../scenes/blob" }            # or your own scene crate
+frames = { path = "../../../frames" } # no `sim` feature on firmware
+blob = { path = "../../scenes/blob" }   # or your own scene crate
 embedded-graphics = "0.8"
 ssd1306 = "0.9"
 ```

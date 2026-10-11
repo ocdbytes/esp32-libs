@@ -1,6 +1,6 @@
 # Demos
 
-Things built on the [`oled-frames`](../oled-frames) library. Each demo has two
+Things built on the [`frames`](../frames) library. Each demo has two
 halves with the same name:
 
 | Folder | What it is | Built with |

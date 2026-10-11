@@ -25,11 +25,11 @@ use esp_hal::gpio::{Level, Output, OutputConfig};
 use esp_hal::main;
 use esp_hal::spi::master::{Config as SpiConfig, Spi};
 use esp_hal::time::{Duration, Instant, Rate};
+use frames::Scene;
 use mipidsi::Builder;
 use mipidsi::interface::SpiInterface;
 use mipidsi::models::ILI9341Rgb565;
 use mipidsi::options::{ColorInversion, ColorOrder, Orientation};
-use oled_frames::Scene;
 use static_cell::ConstStaticCell;
 
 /// Frame width in pixels. For landscape, swap with `HEIGHT` and rotate below.

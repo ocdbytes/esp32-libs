@@ -8,7 +8,7 @@ use embedded_graphics::{
     pixelcolor::{Rgb565, WebColors},
     prelude::*,
 };
-use oled_frames::sim;
+use frames::sim;
 
 /// Panel size in pixels: 240x320 portrait. Use 320x240 for landscape.
 const SIZE: Size = Size::new(240, 320);

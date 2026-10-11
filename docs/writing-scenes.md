@@ -34,7 +34,7 @@ use embedded_graphics::{
     prelude::*,
     primitives::{Circle, PrimitiveStyle},
 };
-use oled_frames::Scene;
+use frames::Scene;
 
 /// A ball that slides left to right and wraps around.
 #[derive(Default)]
@@ -68,7 +68,7 @@ And `demos/scenes/slider/examples/preview.rs`:
 
 ```rust
 use embedded_graphics::prelude::*;
-use oled_frames::sim;
+use frames::sim;
 use slider::Slider;
 
 fn main() {

@@ -65,7 +65,7 @@ The libraries in the root workspace build for the desktop by default. To
 check that one still compiles for the board, run from the repository root:
 
 ```sh
-cargo +esp build -p oled-frames --target xtensa-esp32-none-elf -Z build-std=core --release
+cargo +esp build -p frames --target xtensa-esp32-none-elf -Z build-std=core --release
 cargo +esp build -p blob --target xtensa-esp32-none-elf -Z build-std=core --release
 ```
 

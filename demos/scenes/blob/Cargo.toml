@@ -6,11 +6,11 @@ rust-version = "1.85"
 
 [features]
 # Desktop preview window. Leave off for firmware builds.
-sim = ["oled-frames/sim"]
+sim = ["frames/sim"]
 
 [dependencies]
 embedded-graphics = "0.8"
-oled-frames = { path = "../../../oled-frames" }
+frames = { path = "../../../frames" }
 
 [[example]]
 name = "preview"

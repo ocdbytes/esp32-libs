@@ -1,6 +1,6 @@
 //! A small round blob with two eyes that hops around and blinks.
 //!
-//! [`Blob`] is an [`oled_frames::Scene`], so the same code runs in the desktop
+//! [`Blob`] is a [`frames::Scene`], so the same code runs in the desktop
 //! previews (`examples/`) and on the ESP32: monochrome on an OLED
 //! (`demos/firmware/blob`), in color on a TFT LCD (`demos/firmware/blob-lcd`).
 #![no_std]
@@ -11,7 +11,7 @@ use embedded_graphics::{
     prelude::*,
     primitives::{Circle, Ellipse, PrimitiveStyle},
 };
-use oled_frames::Scene;
+use frames::Scene;
 
 /// Body diameter in pixels. Odd, so the circle has a center pixel and reaches
 /// equally far on every side; an even one pokes 1 px further right and down.

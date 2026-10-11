@@ -14,7 +14,7 @@ ESP32.
 
 | Path | What it is | Builds for |
 | ---- | ---------- | ---------- |
-| [`oled-frames/`](./oled-frames) | Library: the `Scene` trait and the desktop simulator | Desktop, ESP32 |
+| [`frames/`](./frames) | Library: the `Scene` trait and the desktop simulator | Desktop, ESP32 |
 | [`demos/`](./demos) | Everything built on the library; start with its README | |
 | [`demos/scenes/blob/`](./demos/scenes/blob) | Demo scene: a blob that hops and blinks | Desktop, ESP32 |
 | [`demos/firmware/blob/`](./demos/firmware/blob) | ESP32 firmware that shows the blob on the OLED | ESP32 |
@@ -51,12 +51,14 @@ cargo run --release     # build, flash, and open the serial monitor
 
 ```
 esp32-libs/
-├── Cargo.toml              Workspace: oled-frames + demos/scenes/*
+├── Cargo.toml              Workspace: frames + demos/scenes/*
 ├── .cargo/config.toml      Desktop build settings (CMake 4 fix for SDL2)
-├── oled-frames/            The library
+├── frames/                 The library
 ├── demos/                  Everything built on the library
-│   ├── scenes/blob/        Scene crate + desktop preview example
-│   └── firmware/blob/      ESP32 binary, outside the workspace (esp toolchain)
+│   ├── scenes/blob/        Scene crate + desktop previews (OLED and LCD)
+│   └── firmware/           ESP32 binaries, outside the workspace (esp toolchain)
+│       ├── blob/           SSD1306 OLED
+│       └── blob-lcd/       ILI9341 TFT LCD
 ├── docs/                   Library documentation
 └── rust-esp32-book/        Build and flash guide (mdBook)
 ```

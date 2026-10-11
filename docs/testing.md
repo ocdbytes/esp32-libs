@@ -16,7 +16,7 @@ time).
 
 | Crate | Test | Checks |
 | ----- | ---- | ------ |
-| `oled-frames` | `frame_clears_previous_frame` | `frame()` clears the last frame before drawing, for `BinaryColor` and `Rgb565` |
+| `frames` | `frame_clears_previous_frame` | `frame()` clears the last frame before drawing, for `BinaryColor` and `Rgb565` |
 | `blob` | `stays_on_screen` | The body stays fully on screen for 10,000 ticks, on every `ssd1306` panel size and on 240×320 / 320×240 |
 | `blob` | `eyes_take_body_color_while_blinking` | Eyes show their color when open and the body color mid-blink, monochrome and `Rgb565` |
 
@@ -26,7 +26,7 @@ Checks that a library still compiles for the board. Needs the `esp`
 toolchain (see [setup](../rust-esp32-book/src/setup.md)):
 
 ```sh
-cargo +esp build -p oled-frames --target xtensa-esp32-none-elf -Z build-std=core --release
+cargo +esp build -p frames --target xtensa-esp32-none-elf -Z build-std=core --release
 cargo +esp build -p blob --target xtensa-esp32-none-elf -Z build-std=core --release
 ```
 

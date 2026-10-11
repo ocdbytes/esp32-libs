@@ -85,7 +85,7 @@ pub mod sim {
         S::Color: Into<Rgb888> + From<Rgb888>,
     {
         let mut display = SimulatorDisplay::with_default_color(size, S::Color::default());
-        let mut window = Window::new("oled-frames", &settings::<S::Color>());
+        let mut window = Window::new("frames", &settings::<S::Color>());
         window.set_max_fps(fps);
         loop {
             let Ok(()) = scene.frame(&mut display);

@@ -1,6 +1,6 @@
 # Simulator
 
-`oled_frames::sim::run(scene, size, fps)` opens a window that looks like the
+`frames::sim::run(scene, size, fps)` opens a window that looks like the
 panel and runs the scene until you close the window or press **Esc**:
 
 - **Monochrome scenes** (`BinaryColor`) look like a blue OLED, with a dark gap
@@ -30,15 +30,15 @@ build takes about 30 seconds while SDL2 compiles.
 | Setting | Value | Where |
 | ------- | ----- | ----- |
 | Panel size | `size` argument to `run` (blob preview: `SIZE = 128×64`) | the preview's `main` |
-| Colors | Monochrome: `OledBlue` theme (cyan on dark blue). Color: true colors | `oled-frames/src/lib.rs` |
-| Pixel size | `SCALE = 2` window pixels per panel pixel | `oled-frames/src/lib.rs` |
-| Pixel gap | Monochrome: `OLED_PIXEL_SPACING = 1` window pixel. Color: none | `oled-frames/src/lib.rs` |
+| Colors | Monochrome: `OledBlue` theme (cyan on dark blue). Color: true colors | `frames/src/lib.rs` |
+| Pixel size | `SCALE = 2` window pixels per panel pixel | `frames/src/lib.rs` |
+| Pixel gap | Monochrome: `OLED_PIXEL_SPACING = 1` window pixel. Color: none | `frames/src/lib.rs` |
 | Frame rate | `fps` argument to `run` | the preview's `main` |
 
 ## The `sim` feature
 
-`oled-frames` has a `sim` feature that adds `std`, the simulator, and SDL2.
-Scene crates forward it (`sim = ["oled-frames/sim"]`), and their preview
+`frames` has a `sim` feature that adds `std`, the simulator, and SDL2.
+Scene crates forward it (`sim = ["frames/sim"]`), and their preview
 example requires it:
 
 ```toml

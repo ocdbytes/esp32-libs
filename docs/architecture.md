@@ -10,7 +10,7 @@ repository adds the frame loop, the simulator, and the scenes.
 | Driver (OLED) | [`ssd1306`](https://crates.io/crates/ssd1306) | Talks I²C to a monochrome OLED and holds its 1 KB frame buffer |
 | Driver (LCD) | [`mipidsi`](https://crates.io/crates/mipidsi) | Talks SPI to a color TFT LCD (ILI9341, ST7789, ...) |
 | Drawing | [`embedded-graphics`](https://crates.io/crates/embedded-graphics) | Circles, lines, rectangles, text, bitmaps |
-| Frame loop + preview | [`oled-frames`](../oled-frames) | The `Scene` trait and the desktop simulator |
+| Frame loop + preview | [`frames`](../frames) | The `Scene` trait and the desktop simulator |
 | Scenes | [`demos/scenes/*`](../demos/scenes) | What is drawn, e.g. the blob |
 | Firmware | [`demos/firmware/*`](../demos/firmware) | ESP32 binaries that run a scene on the panel |
 
@@ -19,16 +19,16 @@ repository adds the frame loop, the simulator, and the scenes.
 ```
 demos/firmware/blob (ESP32, OLED)      demos/firmware/blob-lcd (ESP32, LCD)
 ├── blob        (scene)                ├── blob        (scene)
-│   └── oled-frames                    │   └── oled-frames
-├── oled-frames                        ├── oled-frames
+│   └── frames                         │   └── frames
+├── frames                             ├── frames
 ├── ssd1306     (driver)               ├── mipidsi     (driver)
 └── esp-hal     (hardware access)      └── esp-hal     (hardware access)
 
 demos/scenes/blob/examples/preview.rs, preview_lcd.rs (desktop binaries)
-└── blob + oled-frames with the `sim` feature
+└── blob + frames with the `sim` feature
 ```
 
-`oled-frames` and every scene crate are `no_std`, so the same code compiles
+`frames` and every scene crate are `no_std`, so the same code compiles
 for the desktop and for the ESP32. Only the `sim` feature pulls in `std` and
 SDL2, and firmware never enables it.
 
@@ -85,7 +85,7 @@ own frame buffer because `mipidsi` writes straight to the panel; see
 
 ## Why firmware is outside the workspace
 
-The workspace (`oled-frames`, `demos/scenes/*`) builds with the normal Rust
+The workspace (`frames`, `demos/scenes/*`) builds with the normal Rust
 toolchain for your computer. Firmware needs the Xtensa `esp` toolchain, the
 `xtensa-esp32-none-elf` target, `build-std`, and a linker script. Each
 `demos/firmware/<name>/` directory sets these in its own `rust-toolchain.toml`,

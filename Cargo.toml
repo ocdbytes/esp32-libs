@@ -1,5 +1,5 @@
 [workspace]
 resolver = "3"
-members = ["oled-frames", "demos/scenes/*"]
+members = ["frames", "demos/scenes/*"]
 # ESP32 firmware uses its own toolchain and target; build it from its directory.
 exclude = ["demos/firmware"]

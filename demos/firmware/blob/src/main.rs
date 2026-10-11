@@ -11,7 +11,7 @@ use esp_hal::clock::CpuClock;
 use esp_hal::i2c::master::{Config as I2cConfig, I2c};
 use esp_hal::main;
 use esp_hal::time::{Duration, Instant, Rate};
-use oled_frames::Scene;
+use frames::Scene;
 use ssd1306::{I2CDisplayInterface, Ssd1306, prelude::*};
 
 /// Time per frame: ~30 fps, the same rate the desktop preview uses.

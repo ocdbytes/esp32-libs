@@ -1,6 +1,6 @@
 # Documentation
 
-Guides for the `oled-frames` library and the scenes built on it. For installing
+Guides for the `frames` library and the scenes built on it. For installing
 the ESP32 toolchain, building firmware and flashing, see the
 [Rust ESP32 book](../rust-esp32-book/README.md).
 

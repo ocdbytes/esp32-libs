@@ -1,4 +1,4 @@
-# oled-frames
+# frames
 
 Frame-based drawing for small displays, monochrome OLEDs and color LCDs,
 `no_std`.
@@ -13,13 +13,13 @@ tick, `draw` paints onto an `embedded-graphics` target), then call
   `mipidsi` display after each frame. See
   [Hardware: color TFT LCD](../docs/hardware-lcd.md).
 - **Desktop:** enable the `sim` feature and call
-  `oled_frames::sim::run(scene, size, fps)` to open a window that looks like
+  `frames::sim::run(scene, size, fps)` to open a window that looks like
   the panel.
 
 ```toml
 [dependencies]
-oled-frames = { path = "../oled-frames" }                     # firmware
-oled-frames = { path = "../oled-frames", features = ["sim"] } # desktop preview
+frames = { path = "../frames" }                     # firmware
+frames = { path = "../frames", features = ["sim"] } # desktop preview
 ```
 
 ## Documentation
