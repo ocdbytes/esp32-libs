@@ -1,0 +1,26 @@
+[package]
+name = "blob-firmware"
+version = "0.0.1"
+edition = "2024"
+rust-version = "1.88"
+
+[dependencies]
+esp-hal = { version = "~1.1.0", features = ["esp32", "log-04"] }
+esp-bootloader-esp-idf = { version = "0.5.0", features = ["esp32", "log-04"] }
+esp-println = { version = "0.17.0", features = ["esp32", "log-04"] }
+log = "0.4.27"
+
+embedded-graphics = "0.8"
+ssd1306 = "0.9"
+oled-frames = { path = "../../../oled-frames" }
+blob = { path = "../../scenes/blob" }
+
+[profile.dev]
+# The default debug profile is too slow and too big for the ESP32.
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1 # Better optimization from a single codegen unit.
+debug = 2         # Keep symbols for backtraces; they are not flashed.
+lto = "fat"
+opt-level = "s"

@@ -1,1 +1,3 @@
-/target
+target/
+# mdBook output
+rust-esp32-book/book/

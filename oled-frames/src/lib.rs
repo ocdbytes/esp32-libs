@@ -47,7 +47,7 @@ pub trait Scene {
     }
 }
 
-/// Desktop window that previews scenes as a 128x64 blue OLED.
+/// Desktop window that previews scenes as a blue OLED.
 #[cfg(feature = "sim")]
 pub mod sim {
     use embedded_graphics::{pixelcolor::BinaryColor, prelude::*};
@@ -57,20 +57,18 @@ pub mod sim {
 
     use crate::Scene;
 
-    /// Simulated panel size in pixels.
-    pub const SIZE: Size = Size::new(128, 64);
-
     /// Window pixels per panel pixel. Raise it if the window is too small.
     const SCALE: u32 = 2;
     /// Dark gap between panel pixels, in window pixels.
     const PIXEL_SPACING: u32 = 1;
 
-    /// Opens a window and runs `scene` at up to `fps` frames per second.
+    /// Opens a window showing a `size` panel and runs `scene` at up to `fps`
+    /// frames per second.
     ///
-    /// Returns when the window is closed or Escape is pressed. Use the same
-    /// `fps` as the firmware loop so motion matches the panel.
-    pub fn run<S: Scene>(mut scene: S, fps: u32) {
-        let mut display = SimulatorDisplay::<BinaryColor>::new(SIZE);
+    /// Returns when the window is closed or Escape is pressed. Use the panel
+    /// size and frame rate of the real hardware so the preview matches it.
+    pub fn run<S: Scene>(mut scene: S, size: Size, fps: u32) {
+        let mut display = SimulatorDisplay::<BinaryColor>::new(size);
         let settings = OutputSettingsBuilder::new()
             .theme(BinaryColorTheme::OledBlue)
             .scale(SCALE)

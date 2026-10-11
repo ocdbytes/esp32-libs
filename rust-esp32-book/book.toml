@@ -1,0 +1,4 @@
+[book]
+title = "Rust on ESP32: Build and Flash"
+language = "en"
+src = "src"

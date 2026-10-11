@@ -1,0 +1,17 @@
+[package]
+name = "blob"
+version = "0.0.1"
+edition = "2024"
+rust-version = "1.85"
+
+[features]
+# Desktop preview window. Leave off for firmware builds.
+sim = ["oled-frames/sim"]
+
+[dependencies]
+embedded-graphics = "0.8"
+oled-frames = { path = "../../../oled-frames" }
+
+[[example]]
+name = "preview"
+required-features = ["sim"]

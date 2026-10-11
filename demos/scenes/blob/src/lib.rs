@@ -1,14 +1,16 @@
-//! A small round blob with two eyes that hops around and blinks, previewed in
-//! a desktop window.
+//! A small round blob with two eyes that hops around and blinks.
 //!
-//! Run: `cargo run --example blob --features sim`
+//! [`Blob`] is an [`oled_frames::Scene`], so the same code runs in the desktop
+//! preview (`examples/preview.rs`) and on the ESP32 (`demos/firmware/blob`).
+#![no_std]
+#![warn(missing_docs)]
 
 use embedded_graphics::{
     pixelcolor::BinaryColor,
     prelude::*,
     primitives::{Circle, Ellipse, PrimitiveStyle},
 };
-use oled_frames::{Scene, sim};
+use oled_frames::Scene;
 
 /// Body diameter in pixels. Odd, so the circle has a center pixel and reaches
 /// equally far on every side; an even one pokes 1 px further right and down.
@@ -33,7 +35,8 @@ const HOP_SPEED: f32 = 4.0;
 const WALK_SPEED: f32 = 1.0;
 
 /// A filled ball whose eyes are unlit holes in the body.
-struct Blob {
+#[derive(Debug)]
+pub struct Blob {
     /// Screen size, for the floor and walls.
     size: Size,
     /// Body center in pixels.
@@ -48,7 +51,7 @@ struct Blob {
 
 impl Blob {
     /// Creates a blob standing in the bottom-left corner of a `size` screen.
-    fn new(size: Size) -> Self {
+    pub fn new(size: Size) -> Self {
         Self {
             size,
             x: RADIUS,
@@ -85,6 +88,11 @@ impl Scene for Blob {
             self.y = floor;
             self.vy = -HOP_SPEED;
         }
+        // Bump the ceiling and fall back down; matters on short screens.
+        if self.y < RADIUS {
+            self.y = RADIUS;
+            self.vy = 0.0;
+        }
         // Turn around at the side walls.
         let right = self.size.width as f32 - RADIUS;
         if !(RADIUS..=right).contains(&self.x) {
@@ -114,47 +122,46 @@ impl Scene for Blob {
     }
 }
 
-fn main() {
-    sim::run(Blob::new(sim::SIZE), 30);
-}
-
 #[cfg(test)]
 mod tests {
-    use embedded_graphics::primitives::Rectangle;
-    use embedded_graphics_simulator::SimulatorDisplay;
+    use embedded_graphics::{mock_display::MockDisplay, primitives::Rectangle};
 
     use super::*;
 
     #[test]
     fn stays_on_screen() {
-        let mut blob = Blob::new(sim::SIZE);
-        let screen = Rectangle::new(Point::zero(), sim::SIZE);
-        for _ in 0..10_000 {
-            blob.update();
-            let body = Circle::with_center(blob.center(), BODY_DIAMETER).bounding_box();
-            assert_eq!(screen.intersection(&body), body, "body left the screen");
+        // Every panel size the `ssd1306` crate supports.
+        for (w, h) in [(128, 64), (128, 32), (96, 16), (72, 40), (64, 48), (64, 32)] {
+            let size = Size::new(w, h);
+            let screen = Rectangle::new(Point::zero(), size);
+            let mut blob = Blob::new(size);
+            for _ in 0..10_000 {
+                blob.update();
+                let body = Circle::with_center(blob.center(), BODY_DIAMETER).bounding_box();
+                assert_eq!(
+                    screen.intersection(&body),
+                    body,
+                    "body left a {w}x{h} screen"
+                );
+            }
         }
     }
 
     #[test]
     fn eyes_light_up_while_blinking() {
-        let mut blob = Blob::new(sim::SIZE);
-        let mut display = SimulatorDisplay::<BinaryColor>::new(sim::SIZE);
+        // MockDisplay is fixed at 64x64, so the blob gets a 64x64 screen.
+        let mut blob = Blob::new(Size::new(64, 64));
+        let mut display = MockDisplay::new();
+        display.set_allow_overdraw(true);
 
         let Ok(()) = blob.frame(&mut display);
-        assert_eq!(
-            display.get_pixel(blob.eyes()[0]),
-            BinaryColor::Off,
-            "eye open"
-        );
+        let eye = blob.eyes()[0];
+        assert_eq!(display.get_pixel(eye), Some(BinaryColor::Off), "eye open");
 
         for _ in 0..BLINK_EVERY - BLINK_LEN {
             let Ok(()) = blob.frame(&mut display);
         }
-        assert_eq!(
-            display.get_pixel(blob.eyes()[0]),
-            BinaryColor::On,
-            "eye shut"
-        );
+        let eye = blob.eyes()[0];
+        assert_eq!(display.get_pixel(eye), Some(BinaryColor::On), "eye shut");
     }
 }

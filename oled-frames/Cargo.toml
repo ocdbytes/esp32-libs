@@ -14,8 +14,3 @@ embedded-graphics-simulator = { version = "0.8", optional = true }
 # Not used directly: compiles the simulator's SDL2 from source and links it
 # statically, so no system SDL2 install is needed.
 sdl2 = { version = "0.38", features = ["bundled", "static-link"], optional = true }
-
-[[example]]
-name = "blob"
-required-features = ["sim"]
-test = true
